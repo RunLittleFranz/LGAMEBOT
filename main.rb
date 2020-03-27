@@ -2,7 +2,7 @@ require 'telegram/bot'
 require_relative "Player"
 require_relative "GameEngine"
 require_relative "GameSession"
-token = 'Token'
+token = File.read("token.safe")
 gameEngine = nil 
 pending_list = []
 
