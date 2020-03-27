@@ -1,5 +1,6 @@
 require_relative "GameBoardKeys"
 require "telegram/bot/api"
+
 class GameBoard
 
     @final_matrix 
@@ -17,6 +18,18 @@ class GameBoard
 
     def is_edit=(v)
         @is_edit=v
+    end
+
+    def rank 
+        nr = @final_matrix.map {|a| a.map { |e| e.value}}
+        nm = Matrix[*nr]
+        return nm.rank
+    end
+
+    def matttrix
+        nr = @final_matrix.map {|a| a.map { |e| e.value}}
+        nm = Matrix[*nr]
+        return nm.to_a.map(&:inspect)
     end
 
 

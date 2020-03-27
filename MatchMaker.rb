@@ -23,7 +23,7 @@ class MatchMaker
         end
 
         @pending_list << player
-        @bot.api.send_message(chat_id: player.info.id, text: "In cerca di una partita...")
+        @bot.api.send_message(chat_id: player.chat_id, text: "In cerca di una partita...")
         tryToMatch
     end
 

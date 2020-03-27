@@ -24,8 +24,8 @@ class GameSession
     
     def start 
         @players.each.with_index do |plr, i|
-            @bot.api.send_message(chat_id: plr.info.id, text: "INIZIO PARTITA: #{@players[0].info.first_name} VS #{@players[1].info.first_name}")
-            @players[i].message = @bot.api.send_message(chat_id: plr.info.id, text: "Game Loading...")
+            @bot.api.send_message(chat_id: plr.chat_id, text: "INIZIO PARTITA: #{@players[0].info.first_name} VS #{@players[1].info.first_name}")
+            @players[i].message = @bot.api.send_message(chat_id: plr.chat_id, text: "Game Loading...")
         end
         @players[0].player_set = PlayerSet.redPlayer
         @players[1].player_set = PlayerSet.bluePlayer
@@ -42,7 +42,7 @@ class GameSession
             kb = @gameBoard.matrix_to_keyboard(true, @can_pass)
         #puts @players[0].message.inspect
             @players.each do |plr|
-                @bot.api.edit_message_text(chat_id: plr.info.id, 
+                @bot.api.edit_message_text(chat_id: plr.chat_id, 
                 message_id: plr.message["result"]["message_id"],
                 text: "Turno di #{player_turn.info.first_name} - Colore: #{player_turn.player_color}",
              reply_markup: kb
@@ -55,7 +55,7 @@ class GameSession
         if @gameBoard.is_edit 
         kb = @gameBoard.matrix_to_keyboard(flag, @can_pass)
         #puts @players[0].message.inspect
-            @bot.api.edit_message_text(chat_id: player_turn.info.id, 
+            @bot.api.edit_message_text(chat_id: player_turn.chat_id, 
             message_id: player_turn.message["result"]["message_id"],
             text: "Turno di #{player_turn.info.first_name} - Colore: #{player_turn.player_color}\n#{error_text}",
             reply_markup: kb
@@ -130,6 +130,8 @@ class GameSession
     
     def pass 
         @gameBoard.save_board(player_turn.player_set, true)
+        @bot.api.send_message(chat_id: player_turn.chat_id, text: "Board: #{@gameBoard.matttrix} \nRank board: #{@gameBoard.rank}")
+        puts @gameBoard.rank
         reset_flags
         #return false if !@gameBoard.checkEdit(player_turn.player_set) || !@gameBoard.checkFinal(player_turn.player_set)
         @turn = (@turn == 0) ? 1 : 0
@@ -159,7 +161,7 @@ class GameSession
         plr_scemo = player_by_id id 
         #puts @players[0].message.inspect
             @players.each do |plr|
-                @bot.api.edit_message_text(chat_id: plr.info.id, 
+                @bot.api.edit_message_text(chat_id: plr.chat_id, 
                 message_id: plr.message["result"]["message_id"],
                 text: "#{plr_scemo.info.first_name} ha abbandonato la partita",
              )
